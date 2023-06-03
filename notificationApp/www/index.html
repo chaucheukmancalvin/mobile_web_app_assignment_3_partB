@@ -26,29 +26,19 @@
         <div data-role="header">
             <a href="#home" data-role="none" data-transition="slideup"><img src="img/nofi.png" alt="logo image" class="logo"></a>
             <p class="appname noselect">Notify Wee</p>
-            <div class="ui-btn-right ui-bar">
+            <div class="utools ui-btn-right">
                 <a href="#" data-icon="comment" data-theme="b" data-transition="slideup" data-role="button" data-iconpos="notext"></a>
-                <a href="#login" data-icon="user" data-theme="b" data-transition="slideup" data-role="button" data-iconpos="notext"></a>
-			    <a href="#menu" data-rel="popup" data-theme="b" data-icon="bars" data-role="button" data-iconpos="notext"></a>
+                <a href="#login" id="btn-log" data-icon="user" data-theme="b" data-transition="slideup" data-role="button" data-iconpos="notext"></a>
+			    <a href="#" data-icon="grid" data-theme="b" data-transition="slideup" data-role="button" data-iconpos="notext"></a>
             </div>
 		</div>
-		<div id="menu" data-role="popup" data-theme="a" class="margin-top">
-            <ul data-role="listview" data-icon="true">
-                <li data-icon="grid"><a href="#" data-transition="slideup">Event Board</a></li>
-                <li>My account</li>
-                <li data-icon="plus"><a href="#" data-transition="slideup">New Event</a></li>
-                <li data-icon="edit"><a href="#" data-transition="slideup">My Drafts</a></li>
-                <li data-icon="bullets"><a href="#" data-transition="slideup">My Events</a></li>
-                <li><button type="button">Log Out</button></li>
-            </ul>
-        </div>
 
         <!-- =============================== pages =============================== -->
         <div data-role="page" id="home">
             <div data-role="main" class="ui-content">
                 <div class="wrapper">
                     <img src="img/banner.jpg" alt="banner image" class="banner margin-bottom">
-                    <a href="#login" data-transition="slideup" class="ui-btn ui-shadow ui-corner-all ui-btn-c btn-board margin-bottom">Event Board</a>
+                    <a href="#" data-transition="slideup" class="ui-btn ui-shadow ui-corner-all ui-btn-c btn-board margin-bottom">Event Board</a>
                     <a href="#" data-transition="slideup" class="ui-btn ui-shadow ui-btn-b ui-corner-all ui-icon-plus ui-btn-icon-right">New Event</a>
                     <a href="#" data-transition="slideup" class="ui-btn ui-shadow ui-btn-b ui-corner-all ui-icon-edit ui-btn-icon-right margin-btn">My Drafts</a>
                     <a href="#" data-transition="slideup" class="ui-btn ui-shadow ui-btn-b ui-corner-all ui-icon-bullets ui-btn-icon-right margin-btn">My Events</a>
@@ -59,10 +49,67 @@
         <div data-role="page" id="login">
             <div data-role="main" class="ui-content">
                 <div class="wrapper">
-                    <p>testing</p>
+                    <h2>Sign In</h2>
+                    <form id="form-log" autocomplete="off">
+                        <div class="margin-bottom">
+                            <input type="text" id="logID" name="logID" placeholder="User ID" required>
+                        </div>
+                        <div class="margin-bottom">
+                            <input type="password" id="logPW" name="logPW" placeholder="Password" autocomplete="new-password">
+                        </div>
+                        <input type="checkbox" id="showpw" data-role="none">
+                        <label for="showpw" style="display: inline;">Show Password</label>
+                        <button type="submit" data-theme="b" class="margin-top">Login</button>
+                    </form>
+                    <div class="alternative">
+                        <p>---- Don't have an account ----</p>
+                        <a href="#signup" data-transition="slide" class="ui-btn ui-shadow ui-btn-b ui-corner-all">Create An Account</a>
+                    </div>
                 </div>
             </div>
-        </div> <!-- end #home -->
+        </div> <!-- end #login -->
+
+        <div data-role="page" id="signup">
+            <div data-role="main" class="ui-content">
+                <div class="wrapper">
+                    <h2>Sign Up</h2>
+                    <form id="form-res" autocomplete="off">
+                        <div class="margin-bottom">
+                            <input type="text" id="resName" name="name" placeholder="Name" required>
+                        </div>
+                        <div class="margin-bottom">
+                            <input type="text" id="resAddr" name="address" placeholder="Address" required>
+                        </div>
+                        <div class="margin-bottom">
+                            <input type="tel" id="resTel" name="phone" placeholder="Phone number" pattern="[0-9]{10}" required>
+                        </div>
+                        <div class="margin-bottom">
+                            <input type="email" id="resMail" name="mail" placeholder="Email" required>
+                        </div>
+                        <div class="margin-bottom">
+                            <input type="text" id="resID" name="id" placeholder="User ID" required>
+                        </div>
+                        <div class="margin-bottom">
+                            <input type="password" id="resPW" name="pw" placeholder="Password" autocomplete="new-password" required>
+                        </div>
+                        <div class="margin-bottom">
+                            <input type="password" id="resRpw" placeholder="Confirm the password" autocomplete="new-password" required>
+                        </div>
+                        <button type="submit" data-theme="b" class="margin-top">Register</button>
+                    </form>
+                    <div class="alternative">
+                        <p>---- Have an account ----</p>
+                        <a a href="#login" data-transition="slide" class="ui-btn ui-shadow ui-btn-b ui-corner-all">Log In</a>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- end #signup -->
+
+        <div data-role="page" id="user">
+            <div data-role="main" class="ui-content">
+                <div id="user-content" class="wrapper border-left"></div>
+            </div>
+        </div> <!-- end #user -->
 
         <!-- =============================== footer =============================== -->
         <div data-role="footer">

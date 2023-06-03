@@ -27,3 +27,13 @@ function onDeviceReady() {
     console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
     document.getElementById('deviceready').classList.add('ready');
 }
+
+// add password confirmation
+let pw = document.getElementById("pw");
+let rpw = document.getElementById("rpw");
+pw.onchange = validatePW;
+rpw.onkeyup = validatePW;
+function validatePW() {
+    if(pw.value != rpw.value) {rpw.setCustomValidity("Passwords don't match");}
+    else {rpw.setCustomValidity('');}
+}

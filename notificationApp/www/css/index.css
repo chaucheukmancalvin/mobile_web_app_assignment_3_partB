@@ -13,20 +13,30 @@ body {
     user-select: none;
 }
 
-.wrapper {width: 100%; max-width: 37.5em; margin: 0 auto}
+.wrapper {width: 100%; max-width: 37.5em; margin: 0 auto;}
 
-.logo {width: 2.6em; margin-left: .6em;}
+.wrapper h2 {margin-top: 0;}
 
-.appname {margin-left: 4em; color: #E34A27; font-size: .8em; font-style: italic; text-transform: uppercase}
+.logo {width: 3.4em; margin-left: .6em;}
+
+.appname {margin-left: 4.2em; color: #E34A27; font-size: .94em; font-style: italic; text-transform: uppercase}
 
 .banner {width: 100%; max-width: 37.5em}
 
 .btn-board {font-size: clamp(1.4em, 3vw, 4em); text-transform: uppercase;}
 
-.right {float: right;}
+.alternative {margin-top: 3em; text-align: center;}
+
+.border-left {border-left: .2em solid #36454F; padding-left: 1.6em;}
+
+.hidden {display: none;}
 
 .margin-btn {margin-top: .8em;}
 
 .margin-top {margin-top: 1.4em;}
 
 .margin-bottom {margin-bottom: 1em;}
+
+.ulabel {display: inline-block; width: 7em; font-style: italic;}
+
+.utools .ui-btn {width: 2.6em; height: 2.6em; margin-left: .3em; border-radius: 50%;}
