@@ -38,6 +38,12 @@ async function getAllEventData() {
   return result;
 }
 
+async function getLatestEventData() {
+  currCollection = client.db("Assignment3").collection("event");
+  const result = await currCollection.find().sort({ id: -1 }).limit(1).toArray();
+  return result;
+}
+
 async function getEventDataByUser(data) {
   currCollection = client.db("Assignment3").collection("event");
   const result = await currCollection.find(data).toArray();
@@ -70,6 +76,12 @@ app.get('/', (req, res) => {
   
 app.post('/getAllEventData', function (req, res) {
   getAllEventData().then((result) => { 
+    console.log("get data result: "+JSON.stringify(result));
+    res.send( JSON.stringify(result) );}
+  );
+});
+app.post('/getLatestEventData', function (req, res) {
+  getLatestEventData().then((result) => { 
     console.log("get data result: "+JSON.stringify(result));
     res.send( JSON.stringify(result) );}
   );

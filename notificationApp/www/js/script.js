@@ -44,7 +44,7 @@ $(document).on('pagecreate', function() {
 		uploadEventList = [];
 		alertMessage = "";
 		var id;
-		getNewEventID(backendUrl+"/getAllEventData").then(response => 
+		getNewEventID(backendUrl+"/getLatestEventData").then(response => 
 			id=response)
 		.then(data => {
 		  // Handle the response data
@@ -345,10 +345,15 @@ async function getEventData(url,user){
 	  })
 	  //alert("connection status:"+ response.status+"\n"+"connection status text:"+ response.statusText);
 	  const data = await response.json();
-	  id=1;
+	  var id=-1;
 	  for(var i=0; i<data.length;i++){
-		id+=1;
+		for(const [key, value] of Object.entries(data)){
+			if(key=="id"){
+				id=value;
+			}
+		}
 	  }
+	  
 	  return id;
 	}
 	catch(error){
@@ -391,6 +396,7 @@ async function getEventData(url,user){
 	
 	var decodeddata= data;
 	htmlSegment += "<li>";
+	htmlSegment += "<a>";
 	var id = -1;
 	for(const [key, value] of Object.entries(decodeddata)){
 	  console.log(key);
@@ -431,11 +437,14 @@ async function getEventData(url,user){
 	  
 	};
 	htmlSegment+= htmlSegmentImage+htmlSegmentTitle+htmlSegmentDescription+htmlSegmentDate+htmlSegmentStatus;
+	htmlSegment+="</a>";
 	if(draft==0){
 		htmlSegment += "<a id='event"+id+"edit' href='#edit' data-rel='popup' data-position-to='window' data-transition='pop'>Edit</a>";
+		
 	}
 	else if(draft==1){
 		htmlSegment += "<a id='draft"+id+"edit' href='#edit' data-rel='popup' data-position-to='window' data-transition='pop'>Edit</a>";
+		
 	}
 	htmlSegment += '</li>';
 	html += htmlSegment + "<hr>";
