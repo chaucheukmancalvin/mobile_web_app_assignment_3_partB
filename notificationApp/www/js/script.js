@@ -9,6 +9,8 @@ var backendUrl = "http://localhost:3000";
 var selectedNewEventImage = [];
 var formDataOfNewEvent = new FormData();
 
+var selectedEditEventID=null;
+
 $(document).on('pagecreate', function() {
 	if (localStorage.log == null) {setLog(false);}
 	if (localStorage.user == null) {setUser('');}
@@ -158,28 +160,124 @@ $(document).on('pagecreate', '#user', function() {
 	displayUser();
 	$('#logout').on('click', function() {processUnLog()});
 });
+$(document).on('click', '#eventBoardLink', function() {
+	document.location.href="#eventBoard";
+});
 $(document).on('click', '#newEventLink', function() {
-	
-	$("#newEventTitle").val(null);
-	$("#newEventImage").val(null);
-	$("#newEventDescription").val(null);
-	$("#newEventDate").val(null);
-	$("#newEventStatus").val(null);
-	document.location.href="#newEvent";
+	var user =getUser();
+	if(user==""){
+		document.location.href="#login";
+	}
+	else{
+		$("#newEventTitle").val(null);
+		$("#newEventImage").val(null);
+		$("#newEventDescription").val(null);
+		$("#newEventDate").val(null);
+		$("#newEventStatus").val(null);
+		document.location.href="#newEvent";
+	}
   });
 $(document).on('click', '#myDraftLink', function() {
 	var user=getUser();
 	var username = (user=="" ? "" : user.name);
-	$('#container2'+' ul'+' li').remove();
-  	$('#container2'+' ul'+' hr').remove();
-	getEventDataByUser(backendUrl+"/getEventDataByUser",username, 1);
+	if(user==""){
+		document.location.href="#login";
+	}
+	else{
+		$('#container2'+' ul'+' li').remove();
+		$('#container2'+' ul'+' hr').remove();
+		getEventDataByUser(backendUrl+"/getEventDataByUser",username, 1);
+	}
 });
 $(document).on('click', '#myEventLink', function() {
+	selectedEditEventID = null;
 	var user=getUser();
 	var username = (user=="" ? "" : user.name);
-	$('#container1'+' ul'+' li').remove();
-  	$('#container1'+' ul'+' hr').remove();
-	getEventDataByUser(backendUrl+"/getEventDataByUser",username, 0);
+	if(user==""){
+		document.location.href="#login";
+	}
+	else{
+		$('#container1'+' ul'+' li').remove();
+		$('#container1'+' ul'+' hr').remove();
+		getEventDataByUser(backendUrl+"/getEventDataByUser",username, 0);
+	}
+});
+
+$(document).on('click', '.eventEdit', function() {
+	selectedEditEventID = this.id.replace("edit","").replace("event","");
+	getEventDataByID(backendUrl+"/getEventDataByID",selectedEditEventID,0);
+	
+});
+
+$(document).on('click', '.draftEdit', function() {
+	selectedEditEventID = this.id.replace("edit","").replace("draft","");
+	getEventDataByID(backendUrl+"/getEventDataByID",selectedEditEventID,1);
+	
+});
+
+$(document).on('click', '#editEventSave', function() {
+	
+	var editEventTitle = $("#editEventTitle").val();
+	var editEventDescription = $("#editEventDescription").val();
+	var editEventDate = $("#editEventDate").val();
+	var editEventStatus = $("#editEventStatus").val();
+	var data = "{\"title\":\""+editEventTitle+"\",\"description\":\""+editEventDescription+"\",\"date\":\""+editEventDate+"\",\"status\":\""+editEventStatus+"\"}";
+	editEventDataByID(backendUrl+"/editEventDataByID",selectedEditEventID,data,0);
+	
+});
+
+$(document).on('click', '#editDraftSaveDraft', function() {
+	
+	var editDraftTitle = $("#editDraftTitle").val();
+	var editDraftDescription = $("#editDraftDescription").val();
+	var editDraftDate = $("#editDraftDate").val();
+	var editDraftStatus = $("#editDraftStatus").val();
+	var data = "{\"title\":\""+editDraftTitle+"\",\"description\":\""+editDraftDescription+"\",\"date\":\""+editDraftDate+"\",\"status\":\""+editDraftStatus+"\"}";
+	editEventDataByID(backendUrl+"/editEventDataByID",selectedEditEventID,data,1);
+	
+});
+
+$(document).on('click', '#editDraftPublish', function() {
+	
+	var editDraftTitle = $("#editDraftTitle").val();
+	var editDraftDescription = $("#editDraftDescription").val();
+	var editDraftDate = $("#editDraftDate").val();
+	var editDraftStatus = $("#editDraftStatus").val();
+	var data = "{\"title\":\""+editDraftTitle+"\",\"description\":\""+editDraftDescription+"\",\"date\":\""+editDraftDate+"\",\"status\":\""+editDraftStatus+"\",\"draft\":0"+"}";
+	editEventDataByID(backendUrl+"/editEventDataByID",selectedEditEventID,data,1);
+	
+});
+
+$(document).on('click', '#editEventDelete', function() {
+	if($(".editEventPreviewImage")!==null){
+		if($(".editEventPreviewImage").length > 0){
+			deleteImageInFolderByID(backendUrl+"/deleteImageInFolderByID",$(".editEventPreviewImage").attr('src').replace("img/",""),0);
+		}
+		else{
+			deleteEventDataByID(backendUrl+"/deleteEventDataByID",selectedEditEventID,0);
+		}
+	}
+	else{
+		deleteEventDataByID(backendUrl+"/deleteEventDataByID",selectedEditEventID,0);
+	}
+	
+	
+});
+
+$(document).on('click', '#editDraftDelete', function() {
+	if($(".editDraftPreviewImage")!==null){
+		if($(".editDraftPreviewImage").length > 0){
+			deleteImageInFolderByID(backendUrl+"/deleteImageInFolderByID",$(".editDraftPreviewImage").attr('src').replace("img/",""),1);
+		}
+		else{
+			deleteEventDataByID(backendUrl+"/deleteEventDataByID",selectedEditEventID,1);
+		}
+	}
+	else{
+		deleteEventDataByID(backendUrl+"/deleteEventDataByID",selectedEditEventID,1);
+	}
+	
+	
 });
 
 /* ------------------------------- function ------------------------------- */
@@ -316,6 +414,94 @@ async function getEventData(url,user){
 	  alert("connection error :"+ error);
 	}
   }
+
+  async function getEventDataByID(url,id,draft){
+	
+	try{
+		var bodyData = "{\"id\":"+id+"}"; 
+	  const response = await fetch(url,{
+		method: "POST", // *GET, POST, PUT, DELETE, etc.
+		body: JSON.stringify(JSON.parse(bodyData)),
+		//mode: "no-cors", // no-cors, *cors, same-origin
+		headers: {
+		  "Content-Type": "application/json",
+		}
+	  })
+	  alert("connection status:"+ response.status+"\n"+"connection status text:"+ response.statusText);
+	  const data = await response.json();
+	  console.log(data,data.length);
+	  if(draft==0){
+	  $(".editEventPreviewImage").remove();
+	  $("#editEventTitle").val(null);
+	  $("#editEventDescription").val(null);
+	  $("#editEventDate").val(null);
+	  $("#editEventStatus").val(null);
+	  for(var i=0; i<data.length;i++){
+		for(const [key, value] of Object.entries(data[i])){
+			console.log(key,value);
+			if(key=="title"){
+				console.log(value);
+				$("#editEventTitle").val(value);
+			}
+			else if(key=="image"&&value!=null&&value!=""){
+				var img = document.createElement("img");
+				img.src = "img/"+value;
+				img.style = "max-width: 37.5em;";
+				img.classList.add("editEventPreviewImage");
+				$("#editEventTitle").after(img);
+			}
+			else if(key=="description"){
+				$("#editEventDescription").val(value);
+			}
+			else if(key=="date"){
+				$("#editEventDate").val(value);
+			}
+			else if(key=="status"){
+				$("#editEventStatus").val(value);
+			}
+		}
+	  }
+	  $('#editEventPopUp').popup('open');
+	}
+	else if(draft==1){
+		$(".editDraftPreviewImage").remove();
+		$("#editDraftTitle").val(null);
+		$("#editDraftDescription").val(null);
+		$("#editDraftDate").val(null);
+		$("#editDraftStatus").val(null);
+		for(var i=0; i<data.length;i++){
+			for(const [key, value] of Object.entries(data[i])){
+				console.log(key,value);
+				if(key=="title"){
+					console.log(value);
+					$("#editDraftTitle").val(value);
+				}
+				else if(key=="image"&&value!=null&&value!=""){
+					var img = document.createElement("img");
+					img.src = "img/"+value;
+					img.style = "max-width: 37.5em;";
+					img.classList.add("editDraftPreviewImage");
+					$("#editDraftTitle").after(img);
+				}
+				else if(key=="description"){
+					$("#editDraftDescription").val(value);
+				}
+				else if(key=="date"){
+					$("#editDraftDate").val(value);
+				}
+				else if(key=="status"){
+					$("#editDraftStatus").val(value);
+				}
+			}
+		}
+		$('#editDraftPopUp').popup('open');
+	}
+	  
+	}
+	catch(error){
+	  alert("connection error :"+ error);
+	}
+  }
   async function uploadNewEventImage(url,formdata,uploadEventList){
 	try{
 	  await fetch(url,{
@@ -347,7 +533,7 @@ async function getEventData(url,user){
 	  const data = await response.json();
 	  var id=-1;
 	  for(var i=0; i<data.length;i++){
-		for(const [key, value] of Object.entries(data)){
+		for(const [key, value] of Object.entries(data[i])){
 			if(key=="id"){
 				id=value;
 			}
@@ -381,6 +567,98 @@ async function getEventData(url,user){
 	alert("connection error");
   }
   }
+
+  async function editEventDataByID(url,id,data,draft){
+	try{
+	var bodyList = [];
+	bodyList.push("{\"id\":"+id+"}");
+	bodyList.push(data);
+	var bodyinput = JSON.stringify(bodyList);
+	const response = await fetch(url,{
+	 method: "POST", // *GET, POST, PUT, DELETE, etc.
+	 
+	 //mode: "no-cors", // no-cors, *cors, same-origin
+	 headers: {
+	   "Content-Type": "application/json",
+	 },
+	 body: bodyinput
+	 
+   })
+   console.log(response);
+	alert("connection status:"+ response.status+"\n"+"connection status text:"+ response.statusText);
+	selectedEditEventID = null;
+	var user=getUser();
+	var username = (user=="" ? "" : user.name);
+	if(draft==0){
+		$('#container1'+' ul'+' li').remove();
+		$('#container1'+' ul'+' hr').remove();
+		getEventDataByUser(backendUrl+"/getEventDataByUser",username, 0);
+	}
+	else if(draft==1){
+		$('#container2'+' ul'+' li').remove();
+		$('#container2'+' ul'+' hr').remove();
+		getEventDataByUser(backendUrl+"/getEventDataByUser",username, 1);
+	}
+  }
+  catch(error){
+	alert("connection error");
+  }
+  }
+
+  async function deleteImageInFolderByID(url,image,draft){
+	try{
+	const response = await fetch(url,{
+	 method: "POST", // *GET, POST, PUT, DELETE, etc.
+	 
+	 //mode: "no-cors", // no-cors, *cors, same-origin
+	 headers: {
+	   "Content-Type": "application/json",
+	 },
+	 body: "{\"image\":\""+image+"\"}"
+	 
+   }).then(response=>{}).then(data=>{
+	deleteEventDataByID(backendUrl+"/deleteEventDataByID",selectedEditEventID,draft);
+   })
+   
+  }
+  catch(error){
+	alert("connection error");
+  }
+  }
+
+  async function deleteEventDataByID(url,id,draft){
+	try{
+	const response = await fetch(url,{
+	 method: "POST", // *GET, POST, PUT, DELETE, etc.
+	 
+	 //mode: "no-cors", // no-cors, *cors, same-origin
+	 headers: {
+	   "Content-Type": "application/json",
+	 },
+	 body: "{\"id\":"+id+"}"
+	 
+   })
+   console.log(response);
+	alert("connection status:"+ response.status+"\n"+"connection status text:"+ response.statusText);
+	selectedEditEventID = null;
+	var user=getUser();
+	var username = (user=="" ? "" : user.name);
+	if(draft==0){
+		$('#container1'+' ul'+' li').remove();
+		$('#container1'+' ul'+' hr').remove();
+		getEventDataByUser(backendUrl+"/getEventDataByUser",username, 0);
+	}
+	else if(draft==1){
+		$('#container2'+' ul'+' li').remove();
+		$('#container2'+' ul'+' hr').remove();
+		getEventDataByUser(backendUrl+"/getEventDataByUser",username, 1);
+	}
+  }
+  catch(error){
+	alert("connection error");
+  }
+  }
+
 
   function outputToMyEventBoard(data,draft) {
 	//$("#showCloudNoData").css("display","none");
@@ -428,7 +706,20 @@ async function getEventData(url,user){
 			}
 			else if(key=="status"){
 				htmlSegmentStatus += '<p>';
-				htmlSegmentStatus += key + " : " + value ;
+				htmlSegmentStatus += key + " : <select disabled>" ;
+				if(value == 1){
+					htmlSegmentStatus += '<option value="1" selected>The 1st Option</option>';
+				}
+				else if(value == 2){
+					htmlSegmentStatus += '<option value="2" selected>The 2nd Option</option>';
+				}
+				else if(value == 3){
+					htmlSegmentStatus += '<option value="3" seledted>The 3rd Option</option>';
+				}
+				else if(value == 4){
+					htmlSegmentStatus += '<option value="4" selected>The 4th Option</option>';
+				}
+				htmlSegmentStatus += '</select>';
 				htmlSegmentStatus += '</p>';
 			}
 
@@ -439,11 +730,11 @@ async function getEventData(url,user){
 	htmlSegment+= htmlSegmentImage+htmlSegmentTitle+htmlSegmentDescription+htmlSegmentDate+htmlSegmentStatus;
 	htmlSegment+="</a>";
 	if(draft==0){
-		htmlSegment += "<a id='event"+id+"edit' href='#edit' data-rel='popup' data-position-to='window' data-transition='pop'>Edit</a>";
+		htmlSegment += "<a id='event"+id+"edit' class='eventEdit' data-rel='popup' data-position-to='window' data-transition='pop'>Edit</a>";
 		
 	}
 	else if(draft==1){
-		htmlSegment += "<a id='draft"+id+"edit' href='#edit' data-rel='popup' data-position-to='window' data-transition='pop'>Edit</a>";
+		htmlSegment += "<a id='draft"+id+"edit' class='draftEdit' data-rel='popup' data-position-to='window' data-transition='pop'>Edit</a>";
 		
 	}
 	htmlSegment += '</li>';

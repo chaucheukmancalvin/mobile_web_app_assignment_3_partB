@@ -38,7 +38,7 @@
             <div data-role="main" class="ui-content">
                 <div class="wrapper">
                     <img src="img/banner.jpg" alt="banner image" class="banner margin-bottom">
-                    <a href="#eventBoard" data-transition="slideup" class="ui-btn ui-shadow ui-corner-all ui-btn-c btn-board margin-bottom">Event Board</a>
+                    <button id="eventBoardLink" data-transition="slideup" class="ui-btn ui-shadow ui-corner-all ui-btn-c btn-board margin-bottom">Event Board</button>
                     <button id="newEventLink" data-transition="slideup" class="ui-btn ui-shadow ui-btn-b ui-corner-all ui-icon-plus ui-btn-icon-right">New Event</button>
                     <button id="myDraftLink" data-transition="slideup" class="ui-btn ui-shadow ui-btn-b ui-corner-all ui-icon-edit ui-btn-icon-right margin-btn">My Drafts</button>
                     <button id="myEventLink" data-transition="slideup" class="ui-btn ui-shadow ui-btn-b ui-corner-all ui-icon-bullets ui-btn-icon-right margin-btn">My Events</button>
@@ -169,11 +169,30 @@
                             
                         </ul>
                     </div>
-                        <div data-role="popup" id="purchase" data-theme="a" data-overlay-theme="b" class="ui-content" style="max-width:340px; padding-bottom:2em;">
-                            <h3>Purchase Album?</h3>
-                            <p>Your download will begin immediately on your mobile device when you purchase.</p>
-                            <a href="index.html" data-rel="back" class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">Buy: $10.99</a>
-                            <a href="index.html" data-rel="back" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-mini">Cancel</a>
+                        <div data-role="popup" id="editDraftPopUp" data-theme="a" data-overlay-theme="b" class="ui-content" style="max-width:340px; padding-bottom:2em;">
+                            <h3>Edit</h3>
+                            <label for="editDraftTitle">Title:</label> 
+                            <input type="text" name="editDraftTitle" id="editDraftTitle" placeholder="Title" required>
+
+                            <label for="editDraftDescription">Description:</label>
+                            <textarea type="text" name="editDraftDescription" id="editDraftDescription" placeholder="Description" rows="5" required></textarea>
+
+                            <label for="editDraftDate">Event Date:</label>
+                            <input type="date" name="editDraftDate" id="editDraftDate" required>
+
+                            <label for="editDraftStatus">Event Status:</label>
+                            <select name="editDraftStatus" id="editDraftStatus" required>
+                                <option value="1">The 1st Option</option>
+                                <option value="2">The 2nd Option</option>
+                                <option value="3">The 3rd Option</option>
+                                <option value="4">The 4th Option</option>
+                            </select>
+                            <div>
+                                <button id="editDraftPublish" data-rel="back" class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">Publish</button>
+                                <button id="editDraftSaveDraft" data-rel="back" class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-edit ui-btn-icon-left ui-btn-inline ui-mini">SaveDraft</button>
+                                <button id="editDraftDelete" data-rel="back" class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-delete ui-btn-icon-left ui-btn-inline ui-mini">Delete</button>
+                                <a href="index.html" data-rel="back" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-mini">Cancel</a>
+                            </div>
                         </div>
                         
                     
@@ -190,11 +209,29 @@
                             
                         </ul>
                     </div>
-                        <div data-role="popup" id="purchase" data-theme="a" data-overlay-theme="b" class="ui-content" style="max-width:340px; padding-bottom:2em;">
-                            <h3>Purchase Album?</h3>
-                            <p>Your download will begin immediately on your mobile device when you purchase.</p>
-                            <a href="index.html" data-rel="back" class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">Buy: $10.99</a>
+                        <div data-role="popup" id="editEventPopUp" data-theme="a" data-overlay-theme="b" class="ui-content" style="max-width:340px; padding-bottom:2em;">
+                            <h3>Edit</h3>
+                            <label for="editEventTitle">Title:</label> 
+                            <input type="text" name="editEventTitle" id="editEventTitle" placeholder="Title" required>
+
+                            <label for="editEventDescription">Description:</label>
+                            <textarea type="text" name="editEventDescription" id="editEventDescription" placeholder="Description" rows="5" required></textarea>
+
+                            <label for="editEventDate">Event Date:</label>
+                            <input type="date" name="editEventDate" id="editEventDate" required>
+
+                            <label for="editEventStatus">Event Status:</label>
+                            <select name="editEventStatus" id="editEventStatus" required>
+                                <option value="1">The 1st Option</option>
+                                <option value="2">The 2nd Option</option>
+                                <option value="3">The 3rd Option</option>
+                                <option value="4">The 4th Option</option>
+                            </select>
+                            <div>
+                            <button id="editEventSave" data-rel="back" class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">Save</button>
+                            <button id="editEventDelete" data-rel="back" class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-delete ui-btn-icon-left ui-btn-inline ui-mini">Delete</button>
                             <a href="index.html" data-rel="back" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-mini">Cancel</a>
+                            </div>
                         </div>
                         
                     

@@ -50,6 +50,12 @@ async function getEventDataByUser(data) {
   return result;
 }
 
+async function getEventDataByID(data) {
+  currCollection = client.db("Assignment3").collection("event");
+  const result = await currCollection.find(data).toArray();
+  return result;
+}
+
 async function setNewEventData(data) {
   currCollection = client.db("Assignment3").collection("event");
   console.log("data to set: "+data);
@@ -57,9 +63,23 @@ async function setNewEventData(data) {
   return result;
 }
 
+async function editEventDataByID(data) {
+  currCollection = client.db("Assignment3").collection("event");
+  console.log("data to set: "+data);
+  const result = await currCollection.updateOne(data[0],{$set:data[1]});
+  return result;
+}
+
 async function deleteData() {
   currCollection = client.db("Assignment3").collection("event");
   const result = await currCollection.deleteMany({});
+  return result;
+}
+
+async function deleteEventDataByID(data) {
+  currCollection = client.db("Assignment3").collection("event");
+  const result = await currCollection.deleteMany(data);
+  console.log(result);
   return result;
 }
 
@@ -96,6 +116,15 @@ app.post('/getEventDataByUser', function (req, res) {
   );
 });
 
+app.post('/getEventDataByID', function (req, res) {
+  var data = req.body;
+  console.log(data);
+  getEventDataByID(data).then((result) => { 
+    console.log("get data result: "+JSON.stringify(result));
+    res.send( JSON.stringify(result) );}
+  );
+});
+
 app.post('/setNewEventData', function (req, res) {
   var data = req.body;
   var convertedData =[];
@@ -110,8 +139,33 @@ app.post('/setNewEventData', function (req, res) {
   
 });
 
+app.post('/editEventDataByID', function (req, res) {
+  var data = req.body;
+  console.log(data);
+  var convertedData =[];
+  for(var i=0; i<data.length; i++){
+    console.log(data[i]);
+    convertedData.push(JSON.parse(data[i]));
+  }
+  editEventDataByID(convertedData).then((result) => { 
+    console.log("set data response: "+JSON.stringify(result));
+    res.send( JSON.stringify(result) );}
+  );
+  
+});
+
+
 app.post('/deleteData', function (req, res) {
   deleteData().then((result) => { 
+    console.log(JSON.stringify(result));
+    res.send( JSON.stringify(result) );}
+  );
+});
+
+app.post('/deleteEventDataByID', function (req, res) {
+  data = req.body;
+  console.log(data);
+  deleteEventDataByID(data).then((result) => { 
     console.log(JSON.stringify(result));
     res.send( JSON.stringify(result) );}
   );
@@ -153,9 +207,23 @@ app.post('/uploadNewEventImage', upload.array('newEventImage'), (req, res) => {
     }
     res.status(200).send('file save successfully');
   } else {
+    console.log('No file uploaded.');
     res.status(400).send('No file uploaded.');
   }
   
+});
+
+app.post('/deleteImageInFolderByID', function (req, res) {
+  var data = req.body;
+  var filePath = path.join(__dirname, '../notificationApp/www/img', data.image); // Set the target path
+  if (fs.existsSync(filePath)) {
+    // Delete the file
+    fs.unlinkSync(filePath);
+    res.status(200).send( "Image Delete Successfully" );
+  }else {
+    
+    res.status(404).send('File not found.');
+  }
 });
 
 
