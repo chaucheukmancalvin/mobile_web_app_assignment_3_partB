@@ -114,7 +114,7 @@ $(document).on('pagecreate', function() {
 		uploadEventList = [];
 		alertMessage = "";
 		var id;
-		getNewEventID(backendUrl+"/getAllEventData").then(response => 
+		getNewEventID(backendUrl+"/getLatestEventData").then(response => 
 			id=response)
 		.then(data => {
 		  // Handle the response data
@@ -161,7 +161,9 @@ $(document).on('pagecreate', '#user', function() {
 	$('#logout').on('click', function() {processUnLog()});
 });
 $(document).on('click', '#eventBoardLink', function() {
-	document.location.href="#eventBoard";
+	$(".card").remove();
+	getAllPublishedEventData(backendUrl+"/getAllPublishedEventData");
+	
 });
 $(document).on('click', '#newEventLink', function() {
 	var user =getUser();
@@ -369,11 +371,10 @@ function processUnLog() {
 	refresh();
 }
 
-async function getEventData(url,user){
+async function getAllPublishedEventData(url){
 	try{
 	  const response = await fetch(url,{
 		method: "POST", // *GET, POST, PUT, DELETE, etc.
-		body:user,
 		//mode: "no-cors", // no-cors, *cors, same-origin
 		headers: {
 		  "Content-Type": "application/json",
@@ -385,6 +386,7 @@ async function getEventData(url,user){
 	  for(var i=0; i<data.length;i++){
 		outputToEventBoard(data[i]);
 	  }
+	  document.location.href="#eventBoard";
 	}
 	catch(error){
 	  alert("connection error :"+ error);
@@ -750,6 +752,84 @@ async function getEventData(url,user){
 		$('#container2'+' ul').listview().listview('refresh');
 	}
 		
+  }
+
+  function outputToEventBoard(data) {
+	//$("#showCloudNoData").css("display","none");
+	//console.log(localStorage.qrcode);
+	var html = "";    
+	let htmlSegment = "";
+	let htmlSegmentTitle = "";
+	let htmlSegmentImage = "";
+	let htmlSegmentDescription = "";
+	let htmlSegmentDate = "";
+	let htmlSegmentStatus = "";
+	let htmlSegmentAuthor = "";
+	console.log(data);
+	
+	var decodeddata= data;
+	htmlSegment += "<div class='card'>";
+	var id = -1;
+	for(const [key, value] of Object.entries(decodeddata)){
+	  console.log(key);
+	  if(key=="id"){
+		id = value;
+	  }
+	  
+	  if(key=="image"){
+		if(value!=null){
+			htmlSegmentImage+= "<img src='img/"+value+"' alt='"+value+"'/> <br>";
+	  	}
+	  }      
+	  else{
+		if(key!="draft"&&key!="author"&&key!="_id"){
+			if(key=="title"){
+				htmlSegmentTitle += '<h4><b>';
+				htmlSegmentTitle += key + " : " + value ;
+				htmlSegmentTitle += '</b></h4>';
+			}
+			else if(key=="description"){
+				htmlSegmentDescription += '<p>';
+				htmlSegmentDescription += key + " : " + value ;
+				htmlSegmentDescription += '</p>';
+			}
+			else if(key=="date"){
+				htmlSegmentDate += '<p>';
+				htmlSegmentDate += key + " : " + value ;
+				htmlSegmentDate += '</p>';
+			}
+			else if(key=="status"){
+				htmlSegmentStatus += '<p>';
+				htmlSegmentStatus += key + " : ";
+				if(value == 1){
+					htmlSegmentStatus +='The 1st Option'
+				}
+				else if(value == 2){
+					htmlSegmentStatus +='The 2nd Option';
+				}
+				else if(value == 3){
+					htmlSegmentStatus += 'The 3rd Option';
+				}
+				else if(value == 4){
+					htmlSegmentStatus += 'The 4th Option';
+				}
+				
+				htmlSegmentStatus += '</p>';
+			}
+			else if(key=="author"){
+				htmlSegmentAuthor += '<p>';
+				htmlSegmentAuthor += key + " : " + value ;
+				htmlSegmentAuthor += '</p>';
+			}
+		}
+	  }
+	  
+	};
+	htmlSegment+= htmlSegmentImage+"<div class='card-container'>"+htmlSegmentTitle+htmlSegmentDescription+htmlSegmentDate+htmlSegmentStatus+htmlSegmentAuthor+ "</div>";
+	htmlSegment+= "</div>";
+	html += htmlSegment 
+	var newElement = $(html);
+	newElement.appendTo('#cards');
   }
 
 

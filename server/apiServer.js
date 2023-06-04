@@ -44,6 +44,12 @@ async function getLatestEventData() {
   return result;
 }
 
+async function getAllPublishedEventData() {
+  currCollection = client.db("Assignment3").collection("event");
+  const result = await currCollection.find({draft : 0}).sort().toArray();
+  return result;
+}
+
 async function getEventDataByUser(data) {
   currCollection = client.db("Assignment3").collection("event");
   const result = await currCollection.find(data).toArray();
@@ -96,6 +102,13 @@ app.get('/', (req, res) => {
   
 app.post('/getAllEventData', function (req, res) {
   getAllEventData().then((result) => { 
+    console.log("get data result: "+JSON.stringify(result));
+    res.send( JSON.stringify(result) );}
+  );
+});
+
+app.post('/getAllPublishedEventData', function (req, res) {
+  getAllPublishedEventData().then((result) => { 
     console.log("get data result: "+JSON.stringify(result));
     res.send( JSON.stringify(result) );}
   );
