@@ -9,6 +9,7 @@ const port = 3000;
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://admin:admin@cluster0.c163bpz.mongodb.net/?retryWrites=true&w=majority";
 
+let userCollection;
 var LocalData = [];
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -25,9 +26,10 @@ async function run() {
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    userCollection = client.db('Assignment3').collection('user');
   } finally {
     // Ensures that the client will close when you finish/error
-    //await client.close();
+    await client.close();
   }
 }
 run().catch(console.dir);
@@ -239,6 +241,44 @@ app.post('/deleteImageInFolderByID', function (req, res) {
   }
 });
 
+// send a user to cloud
+app.post('/saveUser', async function(req, res) {
+  const user = req.body;
+  await client.connect();
+	try {
+    const query = {uid: user.uid};
+    const existentUser = await findUser(query);
+    if (existentUser === null) {
+      const insertManyresult = await userCollection.insertOne(user);
+      console.log('Inserted a user.');
+      res.status(200).send(JSON.stringify(true));
+    }
+    else {
+      console.log('Insert failed.');
+      res.status(200).send(JSON.stringify(false));
+    }
+	}
+	catch (err) {console.log('MongoDB: ' + err.message);}
+});
+
+// get a user from cloud
+app.get('/getUser/:user', async function(req, res) {
+  const reqUid = req.query.uid;
+  const reqPW = req.query.pw;
+  const query = {uid: reqUid, pw: reqPW};
+  const user = await findUser(query);
+  console.log("Searched a user.");
+  res.status(200).send(JSON.stringify(user));
+});
+
+async function findUser(query) {
+  await client.connect();
+	try {
+		const result = await userCollection.findOne(query);
+    return result;
+	}
+	catch (err) {console.log('MongoDB: ' + err.message);}
+} // end findUser()
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8000'); // Replace with your client-side origin

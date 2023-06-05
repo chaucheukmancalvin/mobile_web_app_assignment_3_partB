@@ -1,4 +1,4 @@
-let isLogged;
+let isSuccess;
 
 localStorage.log;
 localStorage.user;
@@ -14,7 +14,7 @@ var selectedEditEventID=null;
 $(document).on('pagecreate', function() {
 	if (localStorage.log == null) {setLog(false);}
 	if (localStorage.user == null) {setUser('');}
-	if (isLogged) {processLog();}
+	if (getLog()) {processLog(getUser());}
 
 	// sync external widgets and initialise widgets
 	$('[data-role="header"], [data-role="footer"]').toolbar({theme:'c', position: 'fixed', tapToggle: false});
@@ -150,6 +150,7 @@ $(document).on('pagecreate', function() {
 
 $(document).on('pagecreate', '#login', function() {
 	$('#showpw').on('click', function() {showPW()});
+	$('#form-log').submit(function(e) {processLogin(e)});
 });
 
 $(document).on('pagecreate', '#signup', function() {
@@ -160,6 +161,7 @@ $(document).on('pagecreate', '#user', function() {
 	displayUser();
 	$('#logout').on('click', function() {processUnLog()});
 });
+
 $(document).on('click', '#eventBoardLink', function() {
 	$(".card").remove();
 	getAllPublishedEventData(backendUrl+"/getAllPublishedEventData");
@@ -311,33 +313,64 @@ function toStringDate(date) {
 
 // display passwords in text
 function showPW() {
-	let type = $('#log-pw').attr('type');
-	if (type === "password") {$('#log-pw').attr('type', 'text');}
-	else {$('#log-pw').attr('type', 'password');}
+	let type = $('#logPW').attr('type');
+	if (type === "password") {$('#logPW').attr('type', 'text');}
+	else {$('#logPW').attr('type', 'password');}
 }
 
 // process sign-up form
-function processRes(e) {
+async function processRes(e) {
 	e.preventDefault();
-	let tName = $('#resName').val();
-	let tAddr = $('#resAddr').val();
+	let tName = $.trim($('#resName').val());
+	let tAddr = $.trim($('#resAddr').val());
 	let tTel = $('#resTel').val();
 	let tMail = $('#resMail').val();
 	let tID = $('#resID').val();
 	let tPw = $('#resPW').val();
 	let tDate = toStringDate(new Date());
-	let user = {name: tName, address: tAddr, tel: tTel, email: tMail, uid: tID, pw: tPw, date: tDate};
-	setUser(user);
-	document.getElementById("form-res").reset();
-	setLog(true);
-	goToPage('#user');
-	setTimeout(function() {refresh();}, 100);
+	const user = {name: tName, address: tAddr, tel: tTel, email: tMail, uid: tID, pw: tPw, date: tDate};
+	await sendUser(user);
+	if (isSuccess) {
+		document.getElementById("form-res").reset();
+		login(user);
+	}
+	else {alert('Cannot create the account. User ID is already used.');}	
 } // end processRes()
+
+async function sendUser(user) {
+	const req = await fetch(backendUrl + '/saveUser', {
+		method: 'POST',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify(user)
+	});
+	isSuccess = await req.json();
+} // end sendUser()
+
+// process sign-in form
+async function processLogin(e) {
+	e.preventDefault();
+	let tID = $('#logID').val();
+	let tPW = $('#logPW').val();
+	await fetchUser(tID, tPW);
+	const user = getUser();
+	if (user !== null) {
+		document.getElementById("form-log").reset();
+		login(user);
+	}
+	else {alert('User ID or password is incorrect.');}
+} // end processLogin()
+
+async function fetchUser(uid, pw) {
+	const res = await fetch(backendUrl + '/getUser' + `/user?uid=${uid}&pw=${pw}`, {
+		method: 'GET'
+	});
+	const user = await res.json();
+	setUser(user);
+} // end getUser()
 
 function displayUser() {
 	let box = $('#user-content');
-	isLogged = getLog();
-	if (isLogged) {
+	if (getLog()) {
 		let user = getUser();
 		let content = `
 			<h2>User Detail</h2>
@@ -358,18 +391,27 @@ function displayUser() {
 	else {box.text('ERROR: Invalid proceed.');}
 } // end displayUser()
 
+function login(user) {
+	setLog(true);
+	processLog(user);
+	goToPage('#home');
+	refresh();
+} // end login()
+
 // execute when login
-function processLog() {
+function processLog(user) {
+	setUser(user);
 	$('#btn-log').attr('href', '#user');
-}
+} // end processLog()
 
 // execute when logout
 function processUnLog() {
 	setLog(false);
+	setUser('');
 	$('#btn-log').attr('href', '#login');
 	goToPage('#home');
 	refresh();
-}
+} // end processUnLog()
 
 async function getAllPublishedEventData(url){
 	try{

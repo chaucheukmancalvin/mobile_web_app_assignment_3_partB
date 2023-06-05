@@ -18,10 +18,11 @@ function onDeviceReady() {
 }
 
 // add password confirmation
-let pw = document.getElementById("pw");
-let rpw = document.getElementById("rpw");
+const pw = document.getElementById("resPW");
+const rpw = document.getElementById("resRpw");
 pw.onchange = validatePW;
 rpw.onkeyup = validatePW;
+
 function validatePW() {
     if(pw.value != rpw.value) {rpw.setCustomValidity("Passwords don't match");}
     else {rpw.setCustomValidity('');}

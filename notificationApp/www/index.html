@@ -55,7 +55,7 @@
                             <input type="text" id="logID" name="logID" placeholder="User ID" required>
                         </div>
                         <div class="margin-bottom">
-                            <input type="password" id="logPW" name="logPW" placeholder="Password" autocomplete="new-password">
+                            <input type="password" id="logPW" name="logPW" placeholder="Password" autocomplete="new-password">                           
                         </div>
                         <input type="checkbox" id="showpw" data-role="none">
                         <label for="showpw" style="display: inline;">Show Password</label>
@@ -75,22 +75,22 @@
                     <h2>Sign Up</h2>
                     <form id="form-res" autocomplete="off">
                         <div class="margin-bottom">
-                            <input type="text" id="resName" name="name" placeholder="Name" required>
+                            <input type="text" id="resName" name="name" placeholder="Name" title="Cannot be blank" pattern=".*\S.*" required>
                         </div>
                         <div class="margin-bottom">
-                            <input type="text" id="resAddr" name="address" placeholder="Address" required>
+                            <input type="text" id="resAddr" name="address" placeholder="Address" title="Cannot be blank" pattern=".*\S.*" required>
                         </div>
                         <div class="margin-bottom">
-                            <input type="tel" id="resTel" name="phone" placeholder="Phone number" pattern="[0-9]{10}" required>
+                            <input type="tel" id="resTel" name="phone" placeholder="Phone number" title="A 10-digit number" pattern="[0-9]{10}" required>
                         </div>
                         <div class="margin-bottom">
                             <input type="email" id="resMail" name="mail" placeholder="Email" required>
                         </div>
                         <div class="margin-bottom">
-                            <input type="text" id="resID" name="id" placeholder="User ID" required>
+                            <input type="text" id="resID" name="id" placeholder="User ID" title="At least 3 characters and Cannot have whitespaces" pattern="\S{3,}" required>
                         </div>
                         <div class="margin-bottom">
-                            <input type="password" id="resPW" name="pw" placeholder="Password" autocomplete="new-password" required>
+                            <input type="password" id="resPW" name="pw" placeholder="Password" autocomplete="new-password" title="At least 3 characters and Cannot have whitespaces" pattern="\S{3,}" required>
                         </div>
                         <div class="margin-bottom">
                             <input type="password" id="resRpw" placeholder="Confirm the password" autocomplete="new-password" required>
@@ -99,7 +99,7 @@
                     </form>
                     <div class="alternative">
                         <p>---- Have an account ----</p>
-                        <a a href="#login" data-transition="slide" class="ui-btn ui-shadow ui-btn-b ui-corner-all">Log In</a>
+                        <a href="#login" data-transition="slide" class="ui-btn ui-shadow ui-btn-b ui-corner-all">Log In</a>
                     </div>
                 </div>
             </div>
