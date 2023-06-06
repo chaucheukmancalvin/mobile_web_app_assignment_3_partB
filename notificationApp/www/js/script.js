@@ -47,7 +47,7 @@ $(document).on('pagecreate', function() {
 		alertMessage = "";
 		var id;
 		getNewEventID(backendUrl+"/getLatestEventData").then(response => 
-			id=response)
+			id=response+1)
 		.then(data => {
 		  // Handle the response data
 		  console.log(data);
@@ -820,7 +820,7 @@ async function getAllPublishedEventData(url){
 	  
 	  if(key=="image"){
 		if(value!=null){
-			htmlSegmentImage+= "<img src='img/"+value+"' alt='"+value+"'/> <br>";
+			htmlSegmentImage+= "<img src='img/"+value+"' style='width:100%' alt='"+value+"'/> <br>";
 	  	}
 	  }      
 	  else{

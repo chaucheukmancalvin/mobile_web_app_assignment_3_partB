@@ -164,8 +164,11 @@
         <div data-role="page" id="myDraft">
             <div data-role="main" class="ui-content">
                 <div class="wrapper">
-                    <h1>My Event</h1>
-                    <div id="container2">
+                    <h1>My Draft</h1>
+                    <form>
+                        <input data-type="search" id="div2-search">
+                    </form>
+                    <div id="container2" data-filter="true" data-input="#div2-search">
                         <ul data-role="listview" data-split-icon="edit" data-split-theme="a" data-inset="true">
                             
                         </ul>
@@ -205,6 +208,10 @@
             <div data-role="main" class="ui-content">
                 <div class="wrapper">
                     <h1>My Event</h1>
+                    <form>
+                        <input data-type="search" id="div1-search">
+                    </form>
+                    <div id="container2" data-filter="true" data-input="#div1-search">
                     <div id="container1">
                         <ul data-role="listview" data-split-icon="edit" data-split-theme="a" data-inset="true">
                             
