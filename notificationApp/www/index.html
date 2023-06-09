@@ -29,7 +29,7 @@
             <div class="utools ui-btn-right">
                 <a href="#" data-icon="comment" data-theme="b" data-transition="slideup" data-role="button" data-iconpos="notext"></a>
                 <a href="#login" id="btn-log" data-icon="user" data-theme="b" data-transition="slideup" data-role="button" data-iconpos="notext"></a>
-			    <a href="#" data-icon="grid" data-theme="b" data-transition="slideup" data-role="button" data-iconpos="notext"></a>
+			    <button id="eventBoardLink2" data-icon="grid" data-theme="b" data-transition="slideup" data-role="button" data-iconpos="notext"></button>
             </div>
 		</div>
 
@@ -116,12 +116,6 @@
                 <div class="wrapper">
                     <h1>Event Board</h1>
                     <div id="cards">
-                    <div class="card">
-                        <div class="card-container">
-                          <h4><b>John Doe</b></h4> 
-                          <p>Architect & Engineer</p> 
-                        </div>
-                      </div>
                     </div>
                 </div>
             </div>
@@ -146,10 +140,9 @@
 
                     <label for="newEventStatus">Event Status:</label>
                     <select name="newEventStatus" id="newEventStatus" required>
-                        <option value="1">The 1st Option</option>
-                        <option value="2">The 2nd Option</option>
-                        <option value="3">The 3rd Option</option>
-                        <option value="4">The 4th Option</option>
+                        <option value="1">occurring</option>
+                        <option value="2">done</option>
+                        <option value="3">cancelled</option>
                     </select>
                     <div class="ui-grid-b">
                         <div class="ui-block-a"><button class="ui-btn ui-shadow ui-btn-b ui-corner-all ui-btn-icon-right ui-icon-edit margin-btn" name="newEventSaveAsDraft" id="newEventSaveAsDraft">Save as Draft</button></div>
@@ -186,10 +179,9 @@
 
                             <label for="editDraftStatus">Event Status:</label>
                             <select name="editDraftStatus" id="editDraftStatus" required>
-                                <option value="1">The 1st Option</option>
-                                <option value="2">The 2nd Option</option>
-                                <option value="3">The 3rd Option</option>
-                                <option value="4">The 4th Option</option>
+                                <option value="1">occurring</option>
+                                <option value="2">done</option>
+                                <option value="3">cancelled</option>
                             </select>
                             <div>
                                 <button id="editDraftPublish" data-rel="back" class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">Publish</button>
@@ -230,10 +222,9 @@
 
                             <label for="editEventStatus">Event Status:</label>
                             <select name="editEventStatus" id="editEventStatus" required>
-                                <option value="1">The 1st Option</option>
-                                <option value="2">The 2nd Option</option>
-                                <option value="3">The 3rd Option</option>
-                                <option value="4">The 4th Option</option>
+                                <option value="1">occurring</option>
+                                <option value="2">done</option>
+                                <option value="3">cancelled</option>
                             </select>
                             <div>
                             <button id="editEventSave" data-rel="back" class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">Save</button>

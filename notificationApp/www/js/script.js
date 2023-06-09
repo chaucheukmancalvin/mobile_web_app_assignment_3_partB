@@ -167,7 +167,26 @@ $(document).on('click', '#eventBoardLink', function() {
 	getAllPublishedEventData(backendUrl+"/getAllPublishedEventData");
 	
 });
+$(document).on('click', '#eventBoardLink2', function() {
+	$(".card").remove();
+	getAllPublishedEventData(backendUrl+"/getAllPublishedEventData");
+	
+});
 $(document).on('click', '#newEventLink', function() {
+	var user =getUser();
+	if(user==""){
+		document.location.href="#login";
+	}
+	else{
+		$("#newEventTitle").val(null);
+		$("#newEventImage").val(null);
+		$("#newEventDescription").val(null);
+		$("#newEventDate").val(null);
+		$("#newEventStatus").val(null);
+		document.location.href="#newEvent";
+	}
+  });
+  $(document).on('click', '#newEventLink2', function() {
 	var user =getUser();
 	if(user==""){
 		document.location.href="#login";
@@ -193,7 +212,32 @@ $(document).on('click', '#myDraftLink', function() {
 		getEventDataByUser(backendUrl+"/getEventDataByUser",username, 1);
 	}
 });
+$(document).on('click', '#myDraftLink2', function() {
+	var user=getUser();
+	var username = (user=="" ? "" : user.name);
+	if(user==""){
+		document.location.href="#login";
+	}
+	else{
+		$('#container2'+' ul'+' li').remove();
+		$('#container2'+' ul'+' hr').remove();
+		getEventDataByUser(backendUrl+"/getEventDataByUser",username, 1);
+	}
+});
 $(document).on('click', '#myEventLink', function() {
+	selectedEditEventID = null;
+	var user=getUser();
+	var username = (user=="" ? "" : user.name);
+	if(user==""){
+		document.location.href="#login";
+	}
+	else{
+		$('#container1'+' ul'+' li').remove();
+		$('#container1'+' ul'+' hr').remove();
+		getEventDataByUser(backendUrl+"/getEventDataByUser",username, 0);
+	}
+});
+$(document).on('click', '#myEventLink2', function() {
 	selectedEditEventID = null;
 	var user=getUser();
 	var username = (user=="" ? "" : user.name);
@@ -380,9 +424,9 @@ function displayUser() {
 			<p><span class="ulabel">Email</span>${user.email}</p>
 			<p><span class="ulabel">Join Date</span>${user.date}</p>
 			<div class="utools margin-top margin-bottom">
-				<a href="#" class="ui-btn ui-btn-a ui-corner-all ui-icon-plus ui-btn-icon-notext ui-btn-inline">New Event</a>
-				<a href="#" class="ui-btn ui-btn-a ui-corner-all ui-icon-edit ui-btn-icon-notext ui-btn-inline">My Drafts</a>
-				<a href="#" class="ui-btn ui-btn-a ui-corner-all ui-icon-bullets ui-btn-icon-notext ui-btn-inline">My Events</a>
+				<a id="newEventLink2" href="#" class="ui-btn ui-btn-a ui-corner-all ui-icon-plus ui-btn-icon-notext ui-btn-inline">New Event</a>
+				<a id="myDraftLink2" href="#" class="ui-btn ui-btn-a ui-corner-all ui-icon-edit ui-btn-icon-notext ui-btn-inline">My Drafts</a>
+				<a id="myEventLink2" href="#" class="ui-btn ui-btn-a ui-corner-all ui-icon-bullets ui-btn-icon-notext ui-btn-inline">My Events</a>
 			</div>
 			<button type="button" id="logout" class="ui-btn ui-shadow ui-btn-b ui-corner-all ui-icon-action ui-btn-icon-right ui-btn-inline">Log Out</button>
 		`;
@@ -752,16 +796,13 @@ async function getAllPublishedEventData(url){
 				htmlSegmentStatus += '<p>';
 				htmlSegmentStatus += key + " : <select disabled>" ;
 				if(value == 1){
-					htmlSegmentStatus += '<option value="1" selected>The 1st Option</option>';
+					htmlSegmentStatus += '<option value="1" selected>occurring</option>';
 				}
 				else if(value == 2){
-					htmlSegmentStatus += '<option value="2" selected>The 2nd Option</option>';
+					htmlSegmentStatus += '<option value="2" selected>done</option>';
 				}
 				else if(value == 3){
-					htmlSegmentStatus += '<option value="3" seledted>The 3rd Option</option>';
-				}
-				else if(value == 4){
-					htmlSegmentStatus += '<option value="4" selected>The 4th Option</option>';
+					htmlSegmentStatus += '<option value="3" seledted>cancelled</option>';
 				}
 				htmlSegmentStatus += '</select>';
 				htmlSegmentStatus += '</p>';
@@ -844,16 +885,13 @@ async function getAllPublishedEventData(url){
 				htmlSegmentStatus += '<p>';
 				htmlSegmentStatus += key + " : ";
 				if(value == 1){
-					htmlSegmentStatus +='The 1st Option'
+					htmlSegmentStatus +='occurring'
 				}
 				else if(value == 2){
-					htmlSegmentStatus +='The 2nd Option';
+					htmlSegmentStatus +='done';
 				}
 				else if(value == 3){
-					htmlSegmentStatus += 'The 3rd Option';
-				}
-				else if(value == 4){
-					htmlSegmentStatus += 'The 4th Option';
+					htmlSegmentStatus += 'cancelled';
 				}
 				
 				htmlSegmentStatus += '</p>';

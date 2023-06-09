@@ -15,12 +15,8 @@
   "devDependencies": {
     "cordova-android": "^12.0.0",
     "cordova-browser": "^7.0.0",
-    "cordova-plugin-badge": "^0.8.9",
-    "cordova-plugin-camera": "^6.0.0",
-    "cordova-plugin-device": "^2.1.0",
     "cordova-plugin-dialogs": "^2.0.2",
-    "cordova-plugin-file": "^7.0.0",
-    "cordova-plugin-local-notification": "^0.9.0-beta.2"
+    "cordova-plugin-file": "^7.0.0"
   },
   "cordova": {
     "platforms": [
@@ -29,10 +25,6 @@
     ],
     "plugins": {
       "cordova-plugin-dialogs": {},
-      "cordova-plugin-local-notification": {},
-      "cordova-plugin-camera": {
-        "ANDROIDX_CORE_VERSION": "1.6.+"
-      },
       "cordova-plugin-file": {}
     }
   }
